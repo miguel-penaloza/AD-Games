@@ -7,7 +7,9 @@ class EventsController extends Controller {
 	}
 
 	getEvents(req, res) {
-		this.db.insert();
+		//this.db.insert();
+		//this.getUser().then(console.log).catch(console.log);
+		this.anonymous().then(console.log).catch(console.log);
 		res.send('GET request to the homepage');
 	}
 
