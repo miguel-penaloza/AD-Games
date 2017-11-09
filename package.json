@@ -4,6 +4,7 @@
   "description": "my first socket.io app",
   "devDependencies": {
     "autoprefixer-stylus": "0.10.0",
+    "babel-cli": "^6.26.0",
     "babel-core": "6.9.1",
     "babel-jest": "^20.0.3",
     "babel-loader": "6.2.4",
@@ -15,8 +16,10 @@
     "brfs": "1.4.3",
     "concurrently": "3.0.0",
     "css-loader": "0.24.0",
+    "express-print-routes": "^1.0.0",
     "jest": "^20.0.4",
     "nodemon": "^1.11.0",
+    "react-hot-loader": "^3.1.2",
     "react-scripts": "0.6.1",
     "react-test-renderer": "^15.5.4",
     "redux-devtools": "3.3.1",
@@ -68,7 +71,7 @@
     "eject": "react-scripts eject",
     "styles": "stylus -u autoprefixer-stylus ./src/css/style.styl -o ./src/css/style.css",
     "styles:watch": "stylus -u autoprefixer-stylus -w ./src/css/style.styl -o ./src/css/style.css",
-    "dev": "nodemon src/server/server.js",
+    "dev": "nodemon --exec babel-node src/server/server.js",
     "test": "jest"
   },
   "eslintConfig": {

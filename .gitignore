@@ -63,3 +63,6 @@ typings/
 
 # Since Jenkins in not using the package-lock.json
 package-lock.json
+
+# Custom files
+routes.txt
