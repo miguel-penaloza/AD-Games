@@ -5,7 +5,7 @@ class EventsController extends Controller {
 		super();
 		this.router.get('/events', this.getEvents.bind(this));
 		this.router.get('/events/:id', this.getEventById.bind(this));
-		this.router.get('/events/vote')
+		this.router.get('/events/vote', this.getEventById.bind(this));
 	}
 
 	getEvents(req, res) {
