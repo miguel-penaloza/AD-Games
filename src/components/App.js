@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {Component}from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { Switch, Route } from 'react-router-dom';
+import Login from './Login';
+import Home from './Home';
 
-class App extends React.Component {
+class App extends Component {
   constructor() {
     super();
-    this.renderHome = this.renderHome.bind(this);
     this.state = {
       apps: [],
       uid: localStorage.getItem("uid"),
@@ -12,36 +14,22 @@ class App extends React.Component {
     }
   }
 
-  renderHome() {
-    const profile = {
-      Name: localStorage.getItem("owner")
-    };
-
-    return (
-      <div className='base'>
-        <MuiThemeProvider />
-        <div>Agustin puto!</div>
-      </div>
-    );
-  }
-
   render() {
     // check if they are no logged in at all
-    if (!this.state.uid) {
+    /* if (!this.state.uid) {
       this.context.router.transitionTo(`/login`);
       return null;
-    }
+    } */
 
     return (
-      <div className="homePage">
-        {this.renderHome()}
-      </div>
+        <main>
+            <Switch>
+                <Route exact path='/' component={Home}/>
+                <Route path='/login' component={Login}/>
+            </Switch>
+        </main>
     )
   }
 }
 
-
-App.contextTypes = {
-  router: React.PropTypes.object
-}
 export default App;

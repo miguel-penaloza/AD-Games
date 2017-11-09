@@ -13,7 +13,7 @@ const responseGoogle = (response) => {
         .then(function(aResponse){
             localStorage.setItem('owner', aResponse.data.name);
             localStorage.setItem('picture', aResponse.data.picture);
-            window.location.replace("http://localhost:3000");
+            window.location.replace("http://localhost:3001");
         });
 
     }
