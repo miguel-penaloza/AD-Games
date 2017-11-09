@@ -8,4 +8,4 @@ render((
     <BrowserRouter>
         <App/>
     </BrowserRouter>
-), document.getElementById('main'));
+), document.getElementById('rootApp'));
