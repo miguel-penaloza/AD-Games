@@ -1,68 +1,29 @@
 import React, {Component} from 'react';
-import { bubble as Menu } from 'react-burger-menu';
 import styled from 'styled-components';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
+import Details from './Details';
+import Create from './Create';
+import CulturaChupistica from './CulturaChupistica';
 
-const Header = styled.div`
-    h1 {
-        margin-top: 0;
-
-    }
+const Wrapper = styled.main`
+    -moz-filter: ${props => props.blurFocus ? 'blur(8px)': 'none'};
+    -webkit-filter: ${props => props.blurFocus ? 'blur(8px)': 'none'};
+    -ms-filter: ${props => props.blurFocus ? 'blur(8px)': 'none'};
+    filter: ${props => props.blurFocus ? 'blur(8px)': 'none'};
 `;
 
-const Poptrox = styled.div`
+const FloatBox = styled.div`
     position: fixed;
-    left: 0px; 
-    top: 0px;
-    z-index: 20000;
-    width: 100%;
-    height: 100%; 
-    text-align: center; 
-    cursor: pointer; 
-    display: block;
-    opacity: 1;
+    top: 10px;
+    right: 0;
+    background: red;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    background: url("images/AddIcon.png");
+    background-size: 60px;
 `;
-
-class MenuWrap extends Component {
-    constructor (props) {
-      super(props);
-      this.state = {
-        hidden: false
-      };
-    }
-  
-    componentWillReceiveProps(nextProps) {
-      const sideChanged = this.props.children.props.right !== nextProps.children.props.right;
-  
-      if (sideChanged) {
-        this.setState({hidden : true});
-  
-        setTimeout(() => {
-          this.show();
-        }, this.props.wait);
-      }
-    }
-  
-    show() {
-      this.setState({hidden : false});
-    }
-  
-    render() {
-      let style;
-  
-      if (this.state.hidden) {
-        style = {display: 'none'};
-      }
-  
-      return (
-        <div style={style} className={this.props.side}>
-          {this.props.children}
-        </div>
-      );
-    }
-}  
 
 class Home extends Component {
 
@@ -74,8 +35,10 @@ class Home extends Component {
             details: false,
             index: 1,
             event: {},
+            create: false,
             uid: localStorage.getItem("uid"),
-            owner: localStorage.getItem("owner")
+            owner: localStorage.getItem("owner"),
+            game: ''
         }
     }
     
@@ -88,110 +51,15 @@ class Home extends Component {
 		window.location.replace("/login");
     }
 
-    showEdition(){
-        const { event, index } = this.state;
-        return (
-                <div
-                    className="poptrox-overlay" 
-                    style={
-                        {
-                            position: 'fixed',
-                            left: '0px', 
-                            top: '0px',
-                            zIndex: '20000',
-                            width: '100%',
-                            height: '100%', 
-                            textAlign: 'center',
-                            cursor: 'pointer',
-                            display: 'block',
-                            opacity: '1'
-                        }
-                    }
-                >
-                    <div style={{
-                        display:'inline-block',
-                        height:'100%',
-                        verticalAlign:'middle'
-                    }}/>
-                        <div style={{
-                            display:'inline-block',
-                            height:'100%',
-                            verticalAlign: 'middle'
-                        }}/>
-                            <div 
-                                style={
-                                    {
-                                        position:'absolute',
-                                        left:'0',
-                                        top:'0',
-                                        width:'100%',
-                                        height:'100%',
-                                        background:'#000000',
-                                        opacity:'0',
-                                        filter: 'alpha(opacity=0)'
-                                    }
-                                }
-                            />
-                            <div
-                                className="poptrox-popup" 
-                                style={
-                                    {
-                                        display: 'inline-block',
-                                        verticalAlign: 'middle',
-                                        position: 'relative',
-                                        zIndex: '1',
-                                        cursor: 'pointer',
-                                        minWidth: '150px',
-                                        minHeight: '150px',
-                                        width: 'auto', 
-                                        height: 'auto'
-                                    }
-                                }
-                            >
-                                <div className="loader" style={{display: 'none'}}/>
-                                    <div className="pic" style={{display: 'block', textIndent: '0px'}}>
-                                        <img src={`images/fulls/${i}.jpg`} alt="" style={{
-                                            verticalAlign: 'bottom', 
-                                            maxWidth: '808px',
-                                            maxHeight: '883px'
-                                        }}/>
-                                    </div>
-                                    <div className="caption" style={{
-                                        display: 'block'
-                                    }}>
-                                        <h2>{event.name}</h2>
-                                        <p></p>
-                                    </div>
-                                    <span 
-                                    className="closer" 
-                                    onClick={() => this.setState({ deatils: false})}
-                                    style={{
-                                        cursor: 'pointer',
-                                        display: 'block'
-                                    }}/>
-                                    <div className="nav-previous" style={
-                                        {
-                                            display: 'block'
-                                        }
-                                    }/>
-                                    <div className="nav-next"style={
-                                        {
-                                            display: 'block'
-                                        }}
-                                    /> 
-                                </div>
-                </div>
-                );
-    }
-
-    showEventDetails({e, event, i}){
-        e.stopPropagation();
-        e.preventDefault();
+    showEventDetails({ event, i}){
         this.setState({ details: true, event})
     }
 
     getEvents({event, index}) {
-        const i = index + 1;
+        let i = index + 1;
+        if(i > 10) {
+            i=1;
+        }
         return (
                 <article 
                     className="thumb"
@@ -200,7 +68,17 @@ class Home extends Component {
                     <a
                         href={`images/fulls/${i}.jpg`} 
                         className="image"
-                        onClick={(e) => this.showEventDetails({e, event, i})}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            if(event.type === 'GAME'){
+                                this.setState({
+                                    game: event.gameCode
+                                });
+                            } else {
+                                this.showEventDetails({e, event, i});
+                            }
+                        }}
                     >
                         <img 
                             src={`images/thumbs/${i}.jpg`}
@@ -216,43 +94,69 @@ class Home extends Component {
        return [{
            id:12,
             name: 'Leo vs Damian',
-            type: 'BOXEO',
+            type: 'VERSUS',
             canChangeVote: false,
-            votes: [{ user: 'matias.sagasti@appdirect.com', vote: 'LEO' }],
-            score: [{key:'LEO', votes: 2, key: 'Damian', votes: 0}]
+            displayVotes: true,
+            date: 1510324270,
+            votes: [{ user: 'matias.sagasti@appdirect.com', vote: [{key: 'LEO'}] }],
+            score: [{key:'LEO', votes: 1}, { key: 'DAMIAN', votes: 0}]
         }, {
             id:23,
             name: 'Damian vs Andres',
-            type: 'BOXEO',
+            type: 'VERSUS',
             canChangeVote: false,
-            votes: [{ user: 'matias.sagasti@appdirect.com', vote: 'DAMIAN' }],
-            score: [{key:'DAMIAN', votes: 2, key: 'Damian', votes: 0}]
+            displayVotes: true,
+            date: 1510324270,
+            votes: [
+                        { user: 'matias.sagasti@appdirect.com', vote: [{ key: 'DAMIAN' }]},
+                        { user: 'agustion.salesi@appdirect.com', vote:[{ key: 'DAMIAN' }]},
+                        { user: 'sebastian.bogado@appdirect.com', vote: [{ key: 'DAMIAN' }]},
+                        { user: 'mauro.alvarez@appdirect.com', vote: [{ key: 'ANDRES' }]}
+                ],
+            score: [{key:'DAMIAN', votes: 3}, {key: 'ANDRES', votes: 1}]
         },
         {
             id:34,
             name: 'Damian vs Jorge',
-            type: 'BOXEO',
+            type: 'VERSUS',
             canChangeVote: false,
-            votes: [{ user: 'matias.sagasti@appdirect.com', vote: 'DAMIAN' }],
-            score: [{key:'DAMIAN', votes: 2, key: 'JORGE', votes: 0}]
+            displayVotes: true,
+            date: 1510324270,
+            votes: [{ user: 'matias.sagasti@appdirect.com', vote: [{key: 'JORGE'}] }],
+            score: [{key:'DAMIAN', votes: 0}, { key: 'JORGE', votes: 1}]
         },
         {
             id:45,
             name: 'Peru vs Nueva Zelanda (IDA)',
-            type: 'BOXEO',
+            type: 'SCORE',
             canChangeVote: false,
-            votes: [{ user: 'matias.sagasti@appdirect.com', vote: 'PERU' }],
-            score: [{key:'PERU', votes: 2, key: 'NZA', votes: 0}]
+            displayVotes: true,
+            date: 1510324270,
+            votes: [{ user: 'matias.sagasti@appdirect.com', vote: [{ key: 'PERU', value: '1'},{ key: 'NZA', value: '0'}]}],
+            score: [{key:'PERU'}, { key: 'NZA'}]
         },
         {
             id:568,
             name: 'Peru vs Nueva Zelanda (VUELTA)',
-            type: 'BOXEO',
+            type: 'SCORE',
             canChangeVote: false,
-            votes: [{ user: 'matias.sagasti@appdirect.com', vote: 'PERU' }],
-            score: [{key:'PERU', votes: 2, key: 'NZA', votes: 0}]
+            displayVotes: true,
+            date: 1510324270,
+            votes: [{ user: 'matias.sagasti@appdirect.com', vote: [{ key: 'PERU', value: '3'},{ key: 'NZA', value: '0'}]}],
+            score: [{key:'PERU'}, { key: 'NZA'}]
         }
     ];
+    }
+
+    getGames(){
+        return [
+            {
+                id:366363,
+                name: 'Cultura Chupistica',
+                gameCode: 'CULTURA_CHUPISTICA',
+                type: 'GAME'
+            }
+        ];
     }
 
     render() {
@@ -260,7 +164,7 @@ class Home extends Component {
             window.location = '/login';
             return null;
         }
-        const events = this.fetchEvents();
+        const events = [...this.fetchEvents(), ...this.getGames()];
         return (
             <div>
             <Drawer open={this.state.isOpen}
@@ -269,23 +173,38 @@ class Home extends Component {
                 <MenuItem>Home</MenuItem>
                 <MenuItem onClick={ () => this.logout() }>Logout</MenuItem>
             </Drawer>
-            <main id="wrapper">
-            <div id="main">
-                        {
-                            events.map((event, index) => this.getEvents({event, index}))
-                        }
-					</div>
-               {/*  <Header>
-                    <h1>Welcome to the AD-Games!</h1>
-                </Header>
-                <div>
-                    <RaisedButton
-                        label="Toggle Drawer"
-                        onClick={() => this.setState({ isOpen: true})}
-                    />
-                </div> */}
-            </main>
-            {this.state.details && this.showEdition()}
+            <Wrapper id="wrapper" blurFocus={this.state.details || this.state.create}>
+                <div id="main">
+                    {
+                        events.map((event, index) => this.getEvents({event, index}))
+                    }
+				</div>
+            </Wrapper>
+            {this.state.details 
+            && <Details 
+                    event={this.state.event} 
+                    index={this.state.index}
+                    onClose={() => this.setState({ details: false, event: {} })}
+                />
+            }
+            {
+                this.state.create
+                &&  
+                <Create
+                    index={4}
+                    onClose={() => this.setState({ create: false })}
+                />
+
+            }
+            {
+                this.state.game === 'CULTURA_CHUPISTICA' && 
+                <CulturaChupistica 
+                    onClose={() => this.setState({ game: '' })}   
+                />
+            }
+            <FloatBox  
+                onClick={()=> this.setState({create:true})}
+            />
         </div>
         );
     }
