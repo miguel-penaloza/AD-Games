@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import Axios from 'axios';
 import Details from './Details';
 import Create from './Create';
 import CulturaChupistica from './CulturaChupistica';
@@ -25,6 +26,18 @@ const FloatBox = styled.div`
     background-size: 60px;
 `;
 
+const LogoutBox = styled.div`
+    position: fixed;
+    top: 70px;
+    right: 0;
+    background: red;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    background: url("images/LOGOUT.ico");
+    background-size: 60px;
+`;
+
 class Home extends Component {
 
     constructor(props){
@@ -38,8 +51,30 @@ class Home extends Component {
             create: false,
             uid: localStorage.getItem("uid"),
             owner: localStorage.getItem("owner"),
-            game: ''
-        }
+            tokenId: localStorage.getItem("tokenId"),
+            game: '',
+            events: []
+        };
+        this.fetchEventsFromServer = this.fetchEventsFromServer.bind(this);
+    }
+
+    fetchEventsFromServer() {
+        const selfThis = this;
+        const { tokenId } = this.state;
+        Axios.get(
+            'http://localhost:4000/events',
+            {
+                headers: {
+                    "authorization" : tokenId
+                }
+            }
+        )
+        .then(function (response) {
+            selfThis.setState({
+                events: response.data
+            });
+        })
+        .catch(error => console.log(error));
     }
     
     showSettings (event) {
@@ -79,20 +114,23 @@ class Home extends Component {
                                 this.showEventDetails({e, event, i});
                             }
                         }}
+                        style={{
+                            backgroundImage: `url(images/thumbs/${i}.jpg`
+                        }}
                     >
                         <img 
-                            src={`images/thumbs/${i}.jpg`}
+                            src={''}
                             alt=""
                         />
                      </a>
-                        <h2>{event.name}</h2>
+                    <h2>{event.name}</h2>
                     <p>{event.description}</p>
                 </article>);
     }
 
     fetchEvents() {
        return [{
-           id:12,
+           id:1254545,
             name: 'Leo vs Damian',
             type: 'VERSUS',
             canChangeVote: false,
@@ -101,7 +139,7 @@ class Home extends Component {
             votes: [{ user: 'matias.sagasti@appdirect.com', vote: [{key: 'LEO'}] }],
             score: [{key:'LEO', votes: 1}, { key: 'DAMIAN', votes: 0}]
         }, {
-            id:23,
+            id:24443,
             name: 'Damian vs Andres',
             type: 'VERSUS',
             canChangeVote: false,
@@ -116,7 +154,7 @@ class Home extends Component {
             score: [{key:'DAMIAN', votes: 3}, {key: 'ANDRES', votes: 1}]
         },
         {
-            id:34,
+            id:34444,
             name: 'Damian vs Jorge',
             type: 'VERSUS',
             canChangeVote: false,
@@ -126,7 +164,7 @@ class Home extends Component {
             score: [{key:'DAMIAN', votes: 0}, { key: 'JORGE', votes: 1}]
         },
         {
-            id:45,
+            id:4544,
             name: 'Peru vs Nueva Zelanda (IDA)',
             type: 'SCORE',
             canChangeVote: false,
@@ -136,7 +174,7 @@ class Home extends Component {
             score: [{key:'PERU'}, { key: 'NZA'}]
         },
         {
-            id:568,
+            id:568444,
             name: 'Peru vs Nueva Zelanda (VUELTA)',
             type: 'SCORE',
             canChangeVote: false,
@@ -159,12 +197,16 @@ class Home extends Component {
         ];
     }
 
+    componentWillMount() { 
+        this.fetchEventsFromServer();
+    }
+
     render() {
         if (!this.state.uid) {
             window.location = '/login';
             return null;
         }
-        const events = [...this.fetchEvents(), ...this.getGames()];
+        const events = [...this.state.events.filter(event => event.name !== undefined), ...this.getGames()];
         return (
             <div>
             <Drawer open={this.state.isOpen}
@@ -204,6 +246,9 @@ class Home extends Component {
             }
             <FloatBox  
                 onClick={()=> this.setState({create:true})}
+            />
+            <LogoutBox  
+                onClick={()=> this.logout()}
             />
         </div>
         );
