@@ -7,7 +7,7 @@ class EventsController extends Controller {
 		super();
 		this.router.get('/events', this.checkLogin, this.getEvents.bind(this));
 		this.router.get('/events/:id', this.getEventById.bind(this));
-		this.router.get('/events/vote', this.getEventById.bind(this));
+		this.router.get('/events/vote', this.vote.bind(this));
 	}
 
 	getEvents(req, res) {
@@ -31,7 +31,7 @@ class EventsController extends Controller {
 
 	vote(req, res) {
 		var event_id = req.body.eventId;
-		var vote = req.body.vote;
+		var votes = req.body.vote;
 		var user = req.body.user;
 
 		db.collection('events').findOne({ id: event_id }).toArray(function(err, data) {
@@ -42,42 +42,85 @@ class EventsController extends Controller {
 			} else {
 				console.log("Data...");
 
-				db.collection('events').findOne({votes: user}).toArray(function(err, data){
-					if(err) {
-						db.collection('events').update(
-							{id: event_id},
-							{$push: {votes: {'user': user, 'vote': vote}}}
-						)
+				//TODO date < to finalize event
+				if(true) {
+					db.collection('events').findOne({votes: user}).toArray(function (err, data) {
+						if (err) {
+							if(data.type === 'VS'){
+								db.collection('events').update(
+									{id: event_id},
+									{
+										$push: {
+											votes: {
+												'user': user,
+												'vote': votes
+											}
+										}
+									}
+								)
 
-						db.collection('events').findOne({id: event_id}).update({ "score.key": vote }, {
-								$set: {
-									$inc: { votes: +1 }
+								db.collection('events').findOne({id: event_id}).update({"score.key": votes.key}, {
+										$set: {
+											$inc: {votes: +1}
+										}
+									}
+								)
+							} else if(data.type === 'RESULT') {
+								db.collection('events').update(
+									{id: event_id},
+									{
+										$push: {
+											votes: {
+												'user': user,
+												'vote': votes
+											}
+										}
+									}
+								)
+							}
+						} else {
+							if ( data.vote.vote != votes) {
+								if(data.type === 'VS') {
+									db.collection('events').update(
+										{id: event_id, user: user},
+										{
+											$set: {
+												votes: {
+													'user': user,
+													'vote': votes
+												}
+											}
+										}
+									)
+									db.collection('events').findOne({id: event_id}).update({"score.key": votes}, {
+											$set: {
+												$inc: {votes: +1}
+											}
+										}
+									)
+									db.collection('events').findOne({id: event_id}).update({"score.key": data.vote.vote}, {
+											$set: {
+												$inc: {votes: -1}
+											}
+										}
+									)
+								} else if(data.type === 'RESULT') {
+									db.collection('events').update(
+										{id: event_id, user: user},
+										{
+											$set: {
+												votes: {
+													'user': user,
+													'vote': votes
+												}
+											}
+										}
+									)
 								}
 							}
-						)
-					} else {
-						if( data.vote.vote != vote ) {
-							db.collection('events').update(
-								{id: event_id, user: user},
-								{$set: {
-									votes: {'vote': vote}}
-								}
-							)
-							db.collection('events').findOne({id: event_id}).update({ "score.key": vote }, {
-									$set: {
-										$inc: { votes: +1 }
-									}
-								}
-							)
-							db.collection('events').findOne({id: event_id}).update({ "score.key": data.vote.vote }, {
-									$set: {
-										$inc: { votes: -1 }
-									}
-								}
-							)
 						}
-					}
-				})
+					})
+				}
 			}
 		})
 	}
