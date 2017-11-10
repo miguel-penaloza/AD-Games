@@ -12,14 +12,6 @@ class Database {
 		}
 	}
 
-	insert() {
-		this.db.ref('users/jojo/okko').set({
-			username: "name",
-			email: "email",
-			profile_picture : "imageUrl"
-		  });
-	}
-
 	getList(collection)  {
 		return new Promise((success, reject) => {
 			try {
