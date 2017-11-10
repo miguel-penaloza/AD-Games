@@ -20,7 +20,7 @@ class Database {
 	}
 
 	persistDataTest() {
-		this.db.ref('events').set({
+		this.db.ref('events').set( [{
 			id: 1,
 			name: 'Leo vs Damian',
 			type: 'BOXEO',
@@ -36,7 +36,20 @@ class Database {
 				key: 'DAMIAN',
 				votes: 0
 			}]
-		}, function(err, data) {
+		}, {
+				id: 2,
+				name: 'Argentina VS Ecuador',
+				type: 'RESULT',
+				date: new Date(),
+				toDate: new Date(),
+				canChangeVote: true,
+				votes: [{
+					user: 'matias.sagasti@appdirect.com',
+					vote: [{key:'Argentina', value:'3'}, {key:'Ecuador', value:'1'}]
+				}],
+				score:[{key:'ARG'},{key:'ECU'}]
+			}
+		], function(err, data) {
 			// Log de consola
 			console.log("Insertado el registro en la colección.");
 		});

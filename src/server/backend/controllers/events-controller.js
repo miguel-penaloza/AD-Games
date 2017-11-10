@@ -1,11 +1,13 @@
 import Controller from './controller';
-import Database from '../db/database';
-import Event from '../model/event'
+
+const VS = 'VS';
+const RESULT = 'RESULT'
 
 class EventsController extends Controller {
 	constructor() {
 		super();
 		this.router.get('/events', this.checkLogin, this.getEvents.bind(this));
+		this.router.post('/events', this.checkLogin, this.createEvent.bind(this));
 		this.router.get('/events/:id', this.getEventById.bind(this));
 		this.router.get('/events/vote', this.vote.bind(this));
 	}
@@ -31,6 +33,34 @@ class EventsController extends Controller {
 			}
 		})
 	}
+	createEvent(req, res) {
+		var event_type = req.body.type;
+		if(event_type && (event_type == VS || event_type == RESULT))
+			var isValid = event_type == RESULT ? this.validResultEvent(req.body) : this.validVsEvent(req.body);
+		if (!isValid) {
+			res.status(400).send('The event that you are trying to create don\'t have the valid format')
+		} else {
+			this.db.db.ref('events').push(req.body).then(() => {
+				this.db.db.ref("events").once('value').then((snapshot) => {
+					console.log(snapshot.val());
+					res.send(snapshot.val());
+				});
+			});
+		}
+	}
+
+	validVsEvent(event) {
+		return this.basicEventValidation(event);
+	}
+
+	validResultEvent(event) {
+		return this.basicEventValidation(event);
+	}
+
+	basicEventValidation(event) {
+		console.log(new Date(event.date) >= new Date() && event.name && (event.score.length >= 2));
+		return new Date(event.date) >= new Date() && event.name && (event.score.length >= 2);
+	}
 
 	vote(req, res) {
 		var event_id = req.body.eventId;
@@ -49,7 +79,7 @@ class EventsController extends Controller {
 				if(true) {
 					this.db.ref('events').findOne({votes: user}).toArray(function (err, data) {
 						if (err) {
-							if(data.type === 'VS'){
+							if(data.type === VS){
 								this.db.collection('events').update(
 									{id: event_id},
 									{
@@ -68,7 +98,7 @@ class EventsController extends Controller {
 										}
 									}
 								)
-							} else if(data.type === 'RESULT') {
+							} else if(data.type === RESULT) {
 								this.db.ref('events').update(
 									{id: event_id},
 									{
@@ -83,7 +113,7 @@ class EventsController extends Controller {
 							}
 						} else {
 							if ( data.vote.vote != votes) {
-								if(data.type === 'VS') {
+								if(data.type === VS) {
 									this.db.ref('events').update(
 										{id: event_id, user: user},
 										{
@@ -107,7 +137,7 @@ class EventsController extends Controller {
 											}
 										}
 									)
-								} else if(data.type === 'RESULT') {
+								} else if(data.type === RESULT) {
 									this.db.ref('events').update(
 										{id: event_id, user: user},
 										{
