@@ -11,11 +11,10 @@ export default (app) => {
 	return new Promise((success, reject) => {
 		var start = () => {
 			try {
-				app.use(BodyParser.urlencoded({ extended: true }));
-				app.use(BodyParser.json());
-				modules.forEach(m => app.use('/', m.routes));
-				require('express-print-routes')(app, require('path').join(__dirname, '../../../routes.txt'));		   
-				success(app);			
+				app.use(BodyParser.json({type: 'application/json'}));
+				modules.forEach(module => app.use('/', module.routes));
+				require('express-print-routes')(app, require('path').join(__dirname, '../../../routes.txt'));
+				success(app);
 			} catch (e) {
 				reject(e);
 			} 

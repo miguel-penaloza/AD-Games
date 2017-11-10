@@ -30,7 +30,7 @@ class EventsController extends Controller {
 	}
 
 	create(req, res) {
-		Event.getInstace(this.db).create({id: 10}).then((val) => res.send(val)).catch((error) => res.send([]));
+		Event.getInstace(this.db).create(req.body).then((val) => res.send(val)).catch((error) => res.sendStatus(500));
 	}
 
 }
