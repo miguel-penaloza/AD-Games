@@ -1,6 +1,7 @@
 import Promise from 'promise';
 import BodyParser from 'body-parser';
 import UtilsDatabase from './db/utils-database';
+import Configuration from '../configuration';
 import EventsController from './controllers/events-controller';
 const modules = [
 	new EventsController()
@@ -8,7 +9,7 @@ const modules = [
 
 export default (app) => {
 	return new Promise((success, reject) => {
-		//UtilsDatabase.init().then(() => {
+		var start = () => {
 			try {
 				app.use(BodyParser.urlencoded({ extended: true }));
 				app.use(BodyParser.json());
@@ -18,6 +19,11 @@ export default (app) => {
 			} catch (e) {
 				reject(e);
 			} 
-		//}).catch(reject)
+		};
+		if (Configuration.initDB) {
+			UtilsDatabase.init().then(start).catch(reject);
+		} else {
+			start()
+		}
 	});	
 };

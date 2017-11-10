@@ -22,6 +22,22 @@ class Database {
 		}); 
 	}
 
+	getById(collection, id)  {
+		return new Promise((success, reject) => {
+			try {
+				this.db.ref(collection + '/' + id).once('value').then((snapshot) =>  {
+					if(snapshot == null || snapshot === undefined) {
+						success(null);
+					} else {
+						success(snapshot.val())
+					}
+				}).catch(reject);
+			} catch (e) {
+				reject(e);
+			}
+		}); 
+	}
+
 }
 
 export default Database;
