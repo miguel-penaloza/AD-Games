@@ -2,7 +2,7 @@ import React from 'react';
 import GoogleLogin from 'react-google-login';
 import Axios from 'axios';
 
-const responseGoogle = (response) => {
+const responseGoogle = (response) => { console.log(response);
     localStorage.setItem('accessToken', response.accessToken);
     localStorage.setItem('uid', response.profileObj.googleId);
     localStorage.setItem('tokenId', response.tokenId);

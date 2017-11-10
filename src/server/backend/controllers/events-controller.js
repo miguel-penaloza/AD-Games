@@ -1,27 +1,19 @@
 import Controller from './controller';
+import Database from '../db/database';
+import Event from '../model/event'
 
 class EventsController extends Controller {
 	constructor() {
 		super();
-		this.router.get('/events', this.getEvents.bind(this));
+		this.router.get('/events', this.checkLogin, this.getEvents.bind(this));
 		this.router.get('/events/:id', this.getEventById.bind(this));
 		this.router.get('/events/vote', this.getEventById.bind(this));
 	}
 
 	getEvents(req, res) {
-		db.collection('events').find().toArray(function(err, data) {
-			if (err) {
-				console.log(err);
-				return res(err);
-			} else {
-				console.log(data);
-				return res.json(data);
-			}
-		})
-		//this.db.insert();
-		//this.getUser().then(console.log).catch(console.log);
-		this.anonymous().then(console.log).catch(console.log);
-		res.send('GET request to the homepage');
+		this.db.insert();
+		console.log(Event);
+		res.send(Event.collection);
 	}
 
 	getEventById(req, res) {

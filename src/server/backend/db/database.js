@@ -1,17 +1,24 @@
 import Firebase from '../firebase'
 
 class Database {
-    constructor() {
-        this.db = Firebase.database();
-    }
+	constructor() {
+		this.db = undefined;
+	}
 
-    insert() {
-        this.db.ref('users/jojo').set({
-            username: "name",
-            email: "email",
-            profile_picture : "imageUrl"
-          });
-    }
+	init() {
+		if (this.db === undefined) {
+			this.db = Firebase.database();
+		}
+	}
+
+	insert() {
+		this.db.ref('users/jojo/okko').set({
+			username: "name",
+			email: "email",
+			profile_picture : "imageUrl"
+		  });
+	}
+
 }
 
 export default Database;

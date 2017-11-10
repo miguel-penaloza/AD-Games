@@ -1,5 +1,5 @@
 class Event {
-	static collention() {
+	static get collection() {
 		return 'events';
 	}
 }
