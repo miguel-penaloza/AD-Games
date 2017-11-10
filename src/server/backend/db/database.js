@@ -32,6 +32,7 @@ function initEventCollection() {
 		id: 1,
 		name: 'Leo vs Damian',
 		type: 'BOXEO',
+		date: new Date(),
 		canChangeVote: false,
 		votes: [{
 			user: 'matias.sagasti@appdirect.com',
