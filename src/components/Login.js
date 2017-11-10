@@ -90,7 +90,7 @@ class Login extends React.Component {
                             <p>Sign in to start game tool!</p>
                             <Toolbar>
                                 <GoogleLogin
-                                    clientId="95807518936-54oblluocu1nerg3vui2hgu4jfle85gt.apps.googleusercontent.com"
+                                    clientId="863983249957-aagtni0gkkc4a0hr1p4lar4rab30dcub.apps.googleusercontent.com"
                                     buttonText="Log In with Google"
                                     className="google"
                                     scope='https://www.googleapis.com/auth/calendar.readonly profile'
