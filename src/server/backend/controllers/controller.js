@@ -8,11 +8,11 @@ class Controller {
 		this.router = Express.Router();
 		this.db = new Database();
 		this.auth = Firebase.auth();
-		this.auth.onAuthStateChanged(((user) => {
+		this.auth.onAuthStateChanged((user) => {
 			if (user) {
 				this.db.init();
 			}
-		}).bind(this));
+		});
 	}
 
 	get routes() {

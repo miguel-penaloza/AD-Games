@@ -1,5 +1,4 @@
 import Controller from './controller';
-import Database from '../db/database';
 import Event from '../model/event'
 
 class EventsController extends Controller {
