@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import styled from 'styled-components';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import Axios from 'axios';
 import Details from './Details';
 import Create from './Create';
 import CulturaChupistica from './CulturaChupistica';
@@ -25,6 +26,18 @@ const FloatBox = styled.div`
     background-size: 60px;
 `;
 
+const LogoutBox = styled.div`
+    position: fixed;
+    top: 70px;
+    right: 0;
+    background: red;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    background: url("images/LOGOUT.ico");
+    background-size: 60px;
+`;
+
 class Home extends Component {
 
     constructor(props){
@@ -38,8 +51,30 @@ class Home extends Component {
             create: false,
             uid: localStorage.getItem("uid"),
             owner: localStorage.getItem("owner"),
-            game: ''
-        }
+            tokenId: localStorage.getItem("tokenId"),
+            game: '',
+            events: []
+        };
+        this.fetchEventsFromServer = this.fetchEventsFromServer.bind(this);
+    }
+
+    fetchEventsFromServer() {
+        const selfThis = this;
+        const { tokenId } = this.state;
+        Axios.get(
+            'http://localhost:4000/events',
+            {
+                headers: {
+                    "authorization" : tokenId
+                }
+            }
+        )
+        .then(function (response) {
+            selfThis.setState({
+                events: response.data
+            });
+        })
+        .catch(error => console.log(error));
     }
     
     showSettings (event) {
@@ -159,6 +194,10 @@ class Home extends Component {
         ];
     }
 
+
+    componentWillMount() { 
+        this.fetchEventsFromServer();
+    }
     render() {
         if (!this.state.uid) {
             window.location = '/login';
@@ -204,6 +243,9 @@ class Home extends Component {
             }
             <FloatBox  
                 onClick={()=> this.setState({create:true})}
+            />
+            <LogoutBox  
+                onClick={()=> this.logout()}
             />
         </div>
         );

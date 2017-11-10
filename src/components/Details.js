@@ -36,12 +36,16 @@ class Details extends Component {
                 onClose={onClose}
            >
                <Score>
-                    <ScoreItem>
+                    <ScoreItem
+                        onClick={() => false}
+                    >
                         { event.type === 'VERSUS' && <SmallFont>{` ${event.score[0].key} `}</SmallFont>}
                         { event.type === 'VERSUS' ? event.score[0].votes : event.score[0].key }
                     </ScoreItem>
                         <SmallFont>{' vs '}</SmallFont>
-                    <ScoreItem>
+                    <ScoreItem
+                        onClick={() => false}
+                    >
                         {event.type === 'VERSUS' ? event.score[1].votes : event.score[1].key}
                         {event.type === 'VERSUS' && <SmallFont>{` ${event.type === 'VERSUS' && event.score[1].key} `}</SmallFont>} 
                     </ScoreItem>

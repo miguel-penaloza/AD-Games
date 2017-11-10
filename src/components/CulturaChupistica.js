@@ -110,12 +110,12 @@ class CulturaChupistica extends Component {
                 <p>
                     Find a group of friends, sit in a circle, click the button to get a topic, 
                     you should say "cultura chupistica" and a word based on the topic selected,
-                    then in clockwise the player next to you should continue with the topic.
-                    The game finish when someone repeat a word, fortget to tell 'cultura chupistica',
-                    say something incorrect or take more than 5 seconds to respond,
-                    the most common is drink a shot or some alcohol 
-                    (don't use beers or wine, isn't funny isn't is strong), if the one who lost 
-                    don't wanna drink more, the team can select a challenge.
+                    then in a clockwise order the player next to you should continue with the topic.
+                    The game finishes when someone repeats a word, forgets to tell “cultura chupistica”,
+                    says something incorrect or takes more than 5 seconds to respond.
+                    The most common action would be drinking a shot or some sort of alcoholic beverage 
+                    (don’t use beers or wine: it’s not funny if it’s not strong). If the one who lost 
+                    doesn’t wanna drink, the team can select a challenge instead
                 </p>
                 <p>
                     The one who lost, should click the button and continue with the game.
