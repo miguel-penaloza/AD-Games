@@ -88,8 +88,7 @@ class CulturaChupistica extends Component {
             'Europe Cities',
             'Asia Countries',
             'Months',
-            'Days',
-            ''
+            'Days'
         ];
     }
 
