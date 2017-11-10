@@ -14,6 +14,10 @@ class Model {
 		return this.db.getById(this.collection, id);
 	}
 
+	create(instace) {
+		return this.db.create(this.collection, instace);
+	}
+
 }
 
 export default Model;

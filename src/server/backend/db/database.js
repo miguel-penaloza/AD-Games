@@ -15,7 +15,19 @@ class Database {
 	getList(collection)  {
 		return new Promise((success, reject) => {
 			try {
-				this.db.ref(collection).once('value').then((snapshot) =>  success(snapshot.val())).catch(reject);
+				this.db.ref(collection).once('value').then((snapshot) =>  {
+					try {
+						var values = snapshot.val();
+						var keys = Object.keys(values);
+						success(keys.map(key => {
+							var object = values[key];
+							object['key'] = key;
+							return object;
+						}));
+					} catch (e) {
+						reject();
+					}
+				}).catch(reject);
 			} catch (e) {
 				reject(e);
 			}
@@ -36,6 +48,16 @@ class Database {
 				reject(e);
 			}
 		}); 
+	}
+
+	create(collection, instance)  {
+		return new Promise((success, reject) => {
+			try {
+				this.db.ref(collection).push(instance).then(success).catch(reject);
+			} catch (e) {
+				reject(e);
+			}
+		});
 	}
 
 }
