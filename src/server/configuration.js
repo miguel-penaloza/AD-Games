@@ -7,6 +7,10 @@ class Configuration {
 		return "KamiKamiCorosama.965";
 	}
 
+	static get initDB() {
+		return false;
+	}
+	
 	static get firebaseConfiguration() {
 		return {
 			apiKey: "AIzaSyBnL895thjYaf-cXMHHAWCNBJDFY_r1wsI",

@@ -11,7 +11,7 @@ class Model {
 	}
 
 	getById(id) {
-		console.log(id);
+		return this.db.getById(this.collection, id);
 	}
 
 }
