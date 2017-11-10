@@ -1,4 +1,5 @@
 import Firebase from '../firebase'
+import Promise from 'promise';
 
 class Database {
 	constructor() {
@@ -9,7 +10,6 @@ class Database {
 		if (this.db === undefined) {
 			this.db = Firebase.database();
 		}
-		initEventCollection();
 	}
 
 	insert() {
@@ -20,35 +20,16 @@ class Database {
 		  });
 	}
 
+	getList(collection)  {
+		return new Promise((success, reject) => {
+			try {
+				this.db.ref(collection).once('value').then((snapshot) =>  success(snapshot.val())).catch(reject);
+			} catch (e) {
+				reject(e);
+			}
+		}); 
+	}
+
 }
-
-function initEventCollection() {
-	db.collection('events', function(err, collection) {
-		collection.remove({}, function(err, removed) {
-		});
-	});
-
-	db.collection('events').insert({
-		id: 1,
-		name: 'Leo vs Damian',
-		type: 'BOXEO',
-		date: new Date(),
-		canChangeVote: false,
-		votes: [{
-			user: 'matias.sagasti@appdirect.com',
-			vote: 'LEO'
-		}],
-		score: [{
-			key: 'LEO',
-			votes: 1,
-			key: 'DAMIAN',
-			votes: 0
-		}]
-	}, function(err, data) {
-		// Log de consola
-		console.log("Insertado el registro en la colección.");
-	});
-}
-
 
 export default Database;
