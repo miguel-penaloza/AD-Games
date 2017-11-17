@@ -6,7 +6,7 @@ class EventsController extends Controller {
 		super();
 		this.router.get('/events', this.checkLogin, this.getEvents.bind(this));
 		this.router.get('/events/:id', this.checkLogin, this.getEventById.bind(this));
-		this.router.post('/events', this.checkLogin, this.create.bind(this));
+		this.router.post('/events', this.create.bind(this));
 		//this.router.get('/events/vote', this.getEventById.bind(this));
 	}
 

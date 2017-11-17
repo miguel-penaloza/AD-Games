@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
+import Axios from 'axios';
 import Modal from './Modal';
 
 
@@ -34,7 +35,7 @@ class Create extends Component {
     }
 
     render() {
-        const { onClose, index }= this.props;
+        const { onClose, index, onRefresh }= this.props;
         return (
             <Modal
                 onClose={onClose}
@@ -111,7 +112,17 @@ class Create extends Component {
                                     || this.state.score[1].key === ''
                                 }
                                 onClick={()=>{
-                                    const {date} = this.state;
+                                    this.state;
+                                    const selfThis = this;
+                                    Axios.post(
+                                        'http://localhost:4000/events',
+                                        this.state
+                                    )
+                                    .then(function (response) {
+                                        onClose();
+                                        onRefresh();
+                                    })
+                                    .catch(error => console.log(error));
                                 }}
                             >
                                 Save

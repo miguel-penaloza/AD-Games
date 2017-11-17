@@ -235,6 +235,7 @@ class Home extends Component {
                 <Create
                     index={4}
                     onClose={() => this.setState({ create: false })}
+                    onRefresh={() => this.fetchEventsFromServer()}
                 />
 
             }

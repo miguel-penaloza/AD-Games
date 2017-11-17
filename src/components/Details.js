@@ -52,13 +52,14 @@ class Details extends Component {
                 </Score>
                 <Results>
                     <div>Votes:</div>
-                    {event.votes.map(vote => 
+
+                    {event.votes ? event.votes.map(vote => 
                         <div><span>{vote.user}</span>:
                         { event.type === 'VERSUS' ? 
                         ` ${vote.vote[0].key}`:
                             ` ${vote.vote[0].key} ${vote.vote[0].value}  - ${vote.vote[1].key} ${vote.vote[1].value}`}
                         </div>
-                    )}
+                    ) : 'No Votes Yet'}
                 </Results>
                 <h2>{event.name}</h2>
                 <p>{event.description}</p>
